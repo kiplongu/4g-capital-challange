@@ -1,0 +1,51 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: data-processing-job  # Adjust the job name
+  namespace: default  # Adjust as necessary
+  labels:
+    cloud.googleapis.com/location: us-central1  # Your region
+  annotations:
+    run.googleapis.com/launch-stage: GA  # Replace with the appropriate launch stage
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/cloudsql-instances: "4g-capital-backend:us-central1:backend-database"  # Your Cloud SQL instance
+        run.googleapis.com/vpc-access-connector: "4g-vpc-connector"  # Your VPC connector name
+    spec:
+      parallelism: 1  # Number of jobs to run in parallel
+      taskCount: 1  # Total number of tasks
+      template:
+        spec:
+          maxRetries: 3  # Number of retries on failure
+          timeoutSeconds: 600  # Task timeout in seconds
+          serviceAccountName: backend-service-account@4g-capital-backend.iam.gserviceaccount.com  # Your service account email
+          containers:
+          - image: gcr.io/4g-capital-backend/data-processing-image  # Your job image
+            command:
+            - python  # Replace with your command
+            - run_task.py  # Replace with your script
+            args:
+            - --input
+            - gs://your-bucket/input-data.json  # Input data location
+            - --output
+            - gs://your-bucket/output-data.json  # Output data location
+            env:
+            - name: DATABASE_URL
+              value: "postgres://backend_user:4gcapitalpassword@backend-database.us-central1.sql.googleapis.com:5432/backend_db"  # Your database URL
+            resources:
+              limits:
+                cpu: "1"  # CPU limit
+                memory: "512Mi"  # Memory limit
+          volumes:
+          - name: secret-volume
+            secret:
+              secretName: my-secret  # Your secret name
+              items:
+              - key: SECRET_VERSION
+                path: secret-path
+          - name: empty-dir
+            emptyDir:
+              sizeLimit: 1Gi  # Limit for in-memory volume
+              medium: Memory

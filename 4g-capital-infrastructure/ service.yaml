@@ -1,0 +1,54 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: default  # Adjust as necessary
+  labels:
+    cloud.googleapis.com/location: us-central1  # Your region
+  annotations:
+    run.googleapis.com/launch-stage: GA  # Replace with the appropriate launch stage
+    run.googleapis.com/description: "Backend service for 4G Capital"
+    run.googleapis.com/minScale: "1"  # Minimum number of instances
+    run.googleapis.com/cloudsql-instances: "4g-capital-backend:us-central1:backend-database"  # Your Cloud SQL instance
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/timeout: "300"  # Request timeout in seconds
+    spec:
+      containerConcurrency: 80  # Adjust based on your needs
+      serviceAccountName: backend-service-account@4g-capital-backend.iam.gserviceaccount.com  # Your service account email
+      containers:
+      - image: gcr.io/4g-capital-backend/backend-image  # Your backend image
+        name: backend-container
+        ports:
+        - name: http
+          containerPort: 8080  # Adjust based on your application's listening port
+        env:
+        - name: DATABASE_URL
+          value: "postgres://backend_user:4gcapitalpaswword@backend-database.us-central1.sql.googleapis.com:5432/backend_db"  # Your database URL
+        resources:
+          limits:
+            cpu: "1"  # CPU limit
+            memory: "512Mi"  # Memory limit
+        startupProbe:
+          httpGet:
+            path: /health  # Health check endpoint
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health  # Health check endpoint
+            port: 8080
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 3
+          periodSeconds: 10
+  traffic:
+  - percent: 100  # Route 100% traffic to the latest revision
+    latestRevision: true
