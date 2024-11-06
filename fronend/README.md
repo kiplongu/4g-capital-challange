@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# 4G Capital Challenge - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the frontend application for the 4G Capital Challenge. The application has been containerized and deployed to Kubernetes using ArgoCD.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+1. [Project Overview](#project-overview)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [Deployment](#deployment)
+5. [Environment Variables](#environment-variables)
+6. [UI Screenshots](#ui-screenshots)
+7. [License](#license)
 
-### `npm start`
+## Project Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The frontend application is built using React. It provides the user interface to interact with the backend API. The frontend connects to the backend to send and receive messages and displays them in a user-friendly manner. The frontend is containerized using Docker and deployed to Kubernetes using ArgoCD for continuous deployment.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+Before setting up this project, ensure you have the following installed:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (for running the frontend application)
+- Docker (for containerization)
+- Kubernetes (for deployment)
+- `kubectl` (for interacting with your Kubernetes cluster)
+- ArgoCD (for continuous deployment)
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To set up the project locally, follow these steps:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/kiplongu/4g-capital-challange.git
+   cd 4g-capital-challange
+   cd 4g-capital-challange-frontend
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+# Install dependencies: If you have npm installed, you can run:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+npm install
+Run the frontend locally: To start the frontend development server locally, run:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+npm start
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The application will be available at http://localhost:3000.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+# Deployment
+I have containerized the frontend application and deployed it to Kubernetes using ArgoCD. The deployment configurations are stored in the deployment/ directory.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# ArgoCD Integration
+ArgoCD is used to automate the continuous deployment of the application. Once the repository is updated, ArgoCD handles the process of deploying the changes to the Kubernetes cluster.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Environment Variables
+The frontend application relies on the following environment variables for configuration:
 
-### Code Splitting
+REACT_APP_API_URL: The base URL of the backend API.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+Example:
+export REACT_APP_API_URL=http://flask-service:5000/api
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# UI Screenshots
+The UI of the frontend is designed to interact with the backend API, allowing users to view and create messages. Screenshots of the UI can be found in the images/ directory.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# License
+This project is licensed under the MIT License - see the LICENSE file for details.
