@@ -1,51 +1,51 @@
 apiVersion: run.googleapis.com/v1
 kind: Job
 metadata:
-  name: data-processing-job  # Adjust the job name
-  namespace: default  # Adjust as necessary
+  name: data-processing-job-4g-capital
+  namespace: default
   labels:
-    cloud.googleapis.com/location: us-central1  # Your region
+    cloud.googleapis.com/location: us-central1
   annotations:
-    run.googleapis.com/launch-stage: GA  # Replace with the appropriate launch stage
+    run.googleapis.com/launch-stage: GA
 spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/cloudsql-instances: "4g-capital-backend:us-central1:backend-database"  # Your Cloud SQL instance
-        run.googleapis.com/vpc-access-connector: "4g-vpc-connector"  # Your VPC connector name
+        run.googleapis.com/cloudsql-instances: "4g-capital-backend:us-central1:backend-database"
+        run.googleapis.com/vpc-access-connector: "4g-capital-vpc-connector"
     spec:
-      parallelism: 1  # Number of jobs to run in parallel
-      taskCount: 1  # Total number of tasks
+      parallelism: 1
+      taskCount: 1
       template:
         spec:
-          maxRetries: 3  # Number of retries on failure
-          timeoutSeconds: 600  # Task timeout in seconds
-          serviceAccountName: backend-service-account@4g-capital-backend.iam.gserviceaccount.com  # Your service account email
+          maxRetries: 3
+          timeoutSeconds: 600
+          serviceAccountName: 4g-capital-backend-service-account@4g-capital.iam.gserviceaccount.com
           containers:
-          - image: gcr.io/4g-capital-backend/data-processing-image  # Your job image
+          - image: gcr.io/4g-capital-backend/data-processing-image
             command:
-            - python  # Replace with your command
-            - run_task.py  # Replace with your script
+            - python
+            - run_task.py
             args:
             - --input
-            - gs://your-bucket/input-data.json  # Input data location
+            - gs://4g-capital-bucket/input-data.json
             - --output
-            - gs://your-bucket/output-data.json  # Output data location
+            - gs://4g-capital-bucket/output-data.json
             env:
             - name: DATABASE_URL
-              value: "postgres://backend_user:4gcapitalpassword@backend-database.us-central1.sql.googleapis.com:5432/backend_db"  # Your database URL
+              value: "postgres://backend_user:4gcapitalpassword@4g-capital-backend-database.us-central1.sql.googleapis.com:5432/4g-capital_db"
             resources:
               limits:
-                cpu: "1"  # CPU limit
-                memory: "512Mi"  # Memory limit
+                cpu: "1"
+                memory: "512Mi"
           volumes:
           - name: secret-volume
             secret:
-              secretName: my-secret  # Your secret name
+              secretName: 4g-capital-secret
               items:
               - key: SECRET_VERSION
                 path: secret-path
           - name: empty-dir
             emptyDir:
-              sizeLimit: 1Gi  # Limit for in-memory volume
+              sizeLimit: 1Gi
               medium: Memory
