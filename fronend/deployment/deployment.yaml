@@ -1,8 +1,7 @@
-# Service Definition for 4g-react-frontend
 apiVersion: v1
 kind: Service
 metadata:
-  name: 4g-react-frontend-service
+  name: frontend-service  # Updated name to be DNS-compliant
 spec:
   ports:
     - port: 80
@@ -11,7 +10,6 @@ spec:
     app: 4g-react-frontend
   type: NodePort
 ---
-# Deployment Definition for 4g-react-frontend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
