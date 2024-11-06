@@ -1,9 +1,21 @@
+# Service Definition for 4g-react-frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: 4g-react-frontend-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: 4g-react-frontend
+  type: NodePort
+---
+# Deployment Definition for 4g-react-frontend
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: 4g-react-frontend
-  labels:
-    app: 4g-react-frontend
 spec:
   replicas: 2
   selector:
@@ -15,21 +27,7 @@ spec:
         app: 4g-react-frontend
     spec:
       containers:
-      - name: 4g-react-frontend
-        image: kiplongu/4g-react-frontend:latest
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: 4g-react-frontend-service
-spec:
-  selector:
-    app: 4g-react-frontend
-  ports:
-    - protocol: TCP
-      port: 80  # Port the service will expose
-      targetPort: 80  # Port on the container
-      nodePort: 30080  # Port on the node that the service will be exposed on
-  type: NodePort
+        - name: 4g-react-frontend
+          image: kiplongu/4g-react-frontend:latest
+          ports:
+            - containerPort: 80
